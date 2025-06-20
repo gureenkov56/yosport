@@ -1,6 +1,7 @@
 <template>
     <main>
         <h1>Welcome to YoSport!</h1>
+        <UInput type="password" placeholder="Password" />
         <!-- <USelect v-model="value" :items="items" class="w-48" /> -->
         <!-- {{ value }} -->
         <!-- <div > -->

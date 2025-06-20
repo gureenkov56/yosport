@@ -24,8 +24,7 @@
 }
 
 h1 {
-  font-weight: bold;
   margin-bottom: 1rem;
-  font-size: 1.1rem;
+  letter-spacing: 2px;
 }
 </style>
