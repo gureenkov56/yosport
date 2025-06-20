@@ -2,23 +2,31 @@ import { PrismaClient } from './generated/prisma'
 
 const prisma = new PrismaClient()
 
-async function main() {
-    const user = await prisma.user.createMany({
-        data: [
-            {
-                name: 'Pit',
-                email: 'pit@prisma.io',
-            },
-            {
-                name: 'John',
-                email: 'john@prisma.io',
-            }
-        ],
-    })
-    console.log(user)
+// npx tsx script.ts
+
+const users = [
+    {
+        name: 'Pit',
+    },
+    {
+        name: 'John',
+    }
+]
+
+const records = [
+    {
+        userId: 1,
+        pullUps: 22
+    }
+]
+
+async function createMockData() {
+    const user = await prisma.user.createMany({data: users})
+    const record = await prisma.records.createMany({data: records})
+    console.log(user, record)
 }
 
-main()
+createMockData()
     .then(async () => {
         await prisma.$disconnect()
     })
