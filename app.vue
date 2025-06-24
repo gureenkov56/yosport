@@ -18,6 +18,7 @@
 
 .mobile {
   max-width: 500px;
+  width: 90%;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -28,5 +29,14 @@ h1 {
   margin-bottom: 1rem;
   letter-spacing: 4px;
   text-transform: uppercase;
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+.error {
+  color: var(--ui-error);
 }
 </style>

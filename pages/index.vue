@@ -38,10 +38,6 @@ main {
     font-size: .7rem;
     text-align: left;
     margin: .5rem auto 1rem auto;
-
-    &.error {
-      color: var(--ui-error);
-    }
   }
 }
 </style>

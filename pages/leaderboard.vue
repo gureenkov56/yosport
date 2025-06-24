@@ -1,7 +1,13 @@
+import { ULink, UButton } from '../.nuxt/components';
 <template>
     <main class="wrapper">
         <h1>🏆 Leaderboard</h1>
+        <div>
         таблица
+        </div>
+        <ULink to="/create-user">
+            <UButton>Добавить пользователя</UButton>
+        </ULink>
         <div v-for="{ email, id } in data" :key="id">
             {{ email }}
         </div>

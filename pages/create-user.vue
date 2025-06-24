@@ -1,39 +1,41 @@
 <template>
-    <div>
+    <main class="mobile">
         <h1>Создание пользователя</h1>
         <div>
-            <UForm :state="state" class="space-y-4" @submit="onSubmit">
-                <UFormField label="Email" name="email">
-                    <UInput v-model="state.email" />
-                </UFormField>
+            <UFormField label="Имя пользователя">
+                <UInput v-model="name" :color="error ? 'error' : 'neutral'" highlight />
+            </UFormField>
+            <div v-if="error" class="hint error" >Заполните имя пользователя</div>
 
-                <UFormField label="Password" name="password">
-                    <UInput v-model="state.password" type="password" />
-                </UFormField>
-
-                <UButton type="submit">
-                    Submit
-                </UButton>
-            </UForm>
+            <UButton class="mt-2" @click="createUser">
+                Создать
+            </UButton>
         </div>
-    </div>
+    </main>
 </template>
 
 <script lang='ts' setup>
-const state = reactive({
-  email: undefined,
-  password: undefined
+const name = ref('')
+const error = ref(false);
+
+watch(name, () => {
+    error.value = false
 })
 
-const toast = useToast()
-async function onSubmit(event: FormSubmitEvent<typeof state>) {
-  toast.add({ title: 'Success', description: 'The form has been submitted.', color: 'success' })
-  console.log(event.data)
+function createUser(): void {
+    if (!name.value.length) {
+        error.value = true;
+        return
+    }
 }
 </script>
 
 <style lang="scss">
-.mt-1 > div {
+.mt-1>div {
     width: 100%;
+}
+
+.hint {
+    font-size: .7rem;
 }
 </style>
