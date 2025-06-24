@@ -11,4 +11,10 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     '@nuxt/ui',
   ],
+
+  runtimeConfig: {
+    public: {
+      accessKey: process.env.NUXT_PUBLIC_ACCESS_KEY
+    }
+  }
 })

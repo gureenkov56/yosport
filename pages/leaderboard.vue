@@ -1,15 +1,22 @@
 <template>
-    <div>
+    <main class="wrapper">
+        <h1>🏆 Leaderboard</h1>
+        таблица
         <div v-for="{ email, id } in data" :key="id">
             {{ email }}
         </div>
-    </div>
+    </main>
 </template>
 
 <script lang='ts' setup>
 const { data } = await useFetch('/api/users')
-console.log('data', data.value);
 
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+main {
+    h1 {
+        text-align: center;
+    }
+}
+</style>

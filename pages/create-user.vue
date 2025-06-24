@@ -20,12 +20,6 @@
 </template>
 
 <script lang='ts' setup>
-// const name = ref()
-
-// function clickBtn() {
-//     console.log('click');
-// }
-
 const state = reactive({
   email: undefined,
   password: undefined
