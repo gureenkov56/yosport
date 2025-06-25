@@ -15,32 +15,32 @@ datasource db {
 }
 
 model User {
-  id       Int        @id @default(autoincrement())
-  name     String?
-  Workouts Workouts[]
-  Records  Records?
+  id   Int     @id @default(autoincrement())
+  name String?
+
+  RecordDips    Int @default(0)
+  RecordPullUps Int @default(0)
+
+  Dips    Dips[]
+  PullUps PullUps[]
 }
 
-model Workouts {
+model PullUps {
   id   Int      @id @default(autoincrement())
   date DateTime @default(now())
 
-  pullUps      String?
-  pullUpsTotal Int?
-
-  dips      String?
-  dipsTotal Int?
+  set String
 
   user   User @relation(fields: [userId], references: [id])
   userId Int
 }
 
-model Records {
-  id Int @id @default(autoincrement())
+model Dips {
+  id   Int      @id @default(autoincrement())
+  date DateTime @default(now())
 
-  pullUps Int?
-  dips    Int?
+  set String
 
   user   User @relation(fields: [userId], references: [id])
-  userId Int  @unique
+  userId Int
 }

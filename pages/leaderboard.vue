@@ -1,22 +1,65 @@
 import { ULink, UButton } from '../.nuxt/components';
 <template>
-    <main class="wrapper">
-        <h1>🏆 Leaderboard</h1>
-        <div>
-        таблица {{userId}}
-        </div>
+  <main class="wrapper">
+    <h1>🏆 Leaderboard</h1>
 
-        <div v-for="{ id, name } in data" :key="id" :class="{error: id == +userId}">
-            {{id}}{{ name }}
-        </div>
-        <ULink to="/create-user">
-          <UButton>Добавить пользователя</UButton>
-        </ULink>
-    </main>
+    <div>
+      <select id="discipline" v-model="selectedDiscipline" :class="{width120: selectedDiscipline === 'pullups'}">
+        <option value="pullups" selected>Подтягивания</option>
+        <option value="dips">Отжимания на брусьях</option>
+      </select>
+    </div>
+
+    <UTable :data="sortedTableData" class="flex-1 mt-3" :columns="columns" ><div>ss</div></UTable>
+
+<!--      <div v-for="{ id, name, RecordDips, RecordPullUps } in sortedTableData" :key="id" :class="{error: id == +userId}">-->
+<!--        {{ id }} | {{ name }} / {{ RecordDips }} / {{ RecordPullUps }}-->
+<!--      </div>-->
+      <ULink to="/create-user">
+        <UButton class="mt-5">Добавить пользователя</UButton>
+      </ULink>
+  </main>
 </template>
 
 <script lang='ts' setup>
-const { data } = await useFetch('/api/users')
+import type {User} from "~/generated/prisma";
+
+const selectedDiscipline = ref('pullups')
+
+const {data} = await useFetch<User[]>('/api/users')
+
+const sortedTableData = computed(() => {
+  const sorted = [...data.value].sort((a, b) => {
+    const resultA = selectedDiscipline.value === 'pullups' ? a.RecordPullUps : a.RecordDips;
+    const resultB = selectedDiscipline.value === 'pullups' ? b.RecordPullUps : b.RecordDips;
+
+    return resultA > resultB ? -1 : 1
+  })
+
+  // console.log('sorted')
+
+  // console.log('data.value', data.value)
+  // sorted[0].name = sorted[0].name + ' 🏆';
+  // sorted[1].name = sorted[1].name + ' 🥈';
+  // sorted[2].name = sorted[2].name + ' 🥉';
+
+  return sorted
+})
+
+const columns = [
+  {
+    accessorKey: 'name',
+    header: ''
+  },
+  {
+    accessorKey: 'RecordPullUps',
+    header: 'Турник',
+  },
+  {
+    accessorKey: 'RecordDips',
+    header: 'Брусья',
+  },
+]
 
 const userStore = useUserStore()
 
@@ -25,8 +68,35 @@ const userId = computed(() => userStore.id)
 
 <style lang="scss" scoped>
 main {
-    h1 {
-        text-align: center;
+  h1 {
+    text-align: center;
+  }
+
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Standard */
+
+    display: block;
+    margin: 0 auto;
+
+    &::-ms-expand {
+      display: none;
     }
+
+    &:focus {
+      outline: none;
+    }
+
+    &.width120 {
+      width: 120px;
+    }
+  }
+
+
 }
 </style>
