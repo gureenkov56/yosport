@@ -4,6 +4,9 @@
   </UApp>
 </template>
 
+<script setup lang="ts">
+</script>
+
 <style>
 @import "tailwindcss";
 @import "@nuxt/ui";
@@ -38,5 +41,11 @@ button {
 
 .error {
   color: var(--ui-error);
+}
+
+select {
+  &:focus {
+    outline: none;
+  }
 }
 </style>

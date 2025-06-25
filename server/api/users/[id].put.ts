@@ -1,13 +1,16 @@
-import { prisma } from "~/prisma"
+import {prisma} from "~/prisma"
 
 export default defineEventHandler(async (event) => {
-  const id = parseInt(event.context.params!.id)
-  const body = await readBody(event)
+    const id = parseInt(event.context.params!.id)
+    const body = await readBody(event)
 
-  return await prisma.user.update({
-    where: { id },
-    data: {
-      name: body.name,
-    }
-  })
+    setCookie(event, 'userId', `${id}`)
+
+    return prisma.user.update({
+        where: {id},
+        data: {
+            RecordDips: body.RecordDips,
+            RecordPullUps: body.RecordPullUps
+        }
+    });
 })

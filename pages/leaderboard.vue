@@ -8,13 +8,18 @@ import { ULink, UButton } from '../.nuxt/components';
         <option value="pullups" selected>Подтягивания</option>
         <option value="dips">Отжимания на брусьях</option>
       </select>
-
     </div>
 
     <UTable :data="sortedTableData" class="flex-1 mt-3" :columns="columns"/>
 
+    <div>
+      <ULink to="/edit-record">
+        <UButton class="mt-5" color="secondary">Изменить личный рекорд</UButton>
+      </ULink>
+    </div>
+
     <ULink to="/create-user">
-      <UButton class="mt-5">Добавить пользователя</UButton>
+      <UButton class="mt-2" variant="outline" color="neutral">Добавить пользователя</UButton>
     </ULink>
   </main>
 </template>
