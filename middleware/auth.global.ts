@@ -1,16 +1,17 @@
 export default defineNuxtRouteMiddleware((to) => {
-  const allowed = useCookie('access_key')
+  const cookieKey = useCookie('access_key')?.value || '';
+  const validKey = useRuntimeConfig().public.accessKey
 
-  const correctKey = useRuntimeConfig().public.accessKey
+  const isHome = to.path === '/'
+  const isAuthorized = cookieKey === validKey
 
-  // Allow access to homepage and API routes
-  if (to.path === '/' && allowed.value === correctKey) {
+  if (isHome && isAuthorized) {
+    // Already authorized, redirect to /leaderboard
     return navigateTo('/leaderboard')
   }
 
-  if (allowed.value !== correctKey) {
+  if (!isHome && !isAuthorized) {
+    // Not authorized and trying to access another page — redirect to home
     return navigateTo('/')
   }
-
-  
 })
