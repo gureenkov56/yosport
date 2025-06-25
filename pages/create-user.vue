@@ -5,11 +5,15 @@
             <UFormField label="Имя пользователя">
                 <UInput v-model="name" :color="error ? 'error' : 'neutral'" highlight />
             </UFormField>
-            <div v-if="error" class="hint error" >Заполните имя пользователя</div>
+            <div v-if="error" class="hint error">{{errorText}}</div>
 
             <UButton class="mt-2" @click="createUser">
                 Создать
             </UButton>
+
+            <!-- <div v-for="{ id, name } in users" :key="id">
+                {{ name }}
+            </div> -->
         </div>
     </main>
 </template>
@@ -17,15 +21,35 @@
 <script lang='ts' setup>
 const name = ref('')
 const error = ref(false);
+const errorText = ref('')
 
 watch(name, () => {
     error.value = false
+    errorText.value = ''
 })
 
-function createUser(): void {
+async function createUser() {
     if (!name.value.length) {
         error.value = true;
+        errorText.value = 'Заполните имя пользователя';
         return
+    }
+
+    const { data, error: fetchError } = await useFetch('/api/users', {
+      method: 'POST',
+      body: { name: name.value}
+    })
+
+    if (fetchError.value) {
+      const {statusCode} = fetchError.value.data
+      errorText.value = statusCode === 409 ? 'Пользователь уже существует' : 'Ошибка';
+      error.value = true;
+      return
+    }
+
+    if (data.value?.id) {
+      setCookie(null, 'userId', `${data.value.id}`)
+      navigateTo('/leaderboard')
     }
 }
 </script>
