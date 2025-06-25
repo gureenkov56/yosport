@@ -25,5 +25,7 @@ export default defineEventHandler(async (event) => {
 
   const newUser = await prisma.user.create({data: {name}})
 
+  setCookie(event, 'userId', `${newUser.id}`)
+
   return {success: true, ...newUser}
 })

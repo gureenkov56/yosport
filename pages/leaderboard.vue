@@ -3,23 +3,24 @@ import { ULink, UButton } from '../.nuxt/components';
     <main class="wrapper">
         <h1>🏆 Leaderboard</h1>
         <div>
-        таблица {{currentUserId}}
+        таблица {{userId}}
         </div>
-        <ULink to="/create-user">
-            <UButton>Добавить пользователя</UButton>
-        </ULink>
-        <div v-for="{ id, name } in data" :key="id" :class="{error: id == +currentUserId}">
+
+        <div v-for="{ id, name } in data" :key="id" :class="{error: id == +userId}">
             {{id}}{{ name }}
         </div>
+        <ULink to="/create-user">
+          <UButton>Добавить пользователя</UButton>
+        </ULink>
     </main>
 </template>
 
 <script lang='ts' setup>
 const { data } = await useFetch('/api/users')
 
+const userStore = useUserStore()
 
-const currentUserId = useCookie('userId')
-
+const userId = computed(() => userStore.id)
 </script>
 
 <style lang="scss" scoped>

@@ -48,7 +48,6 @@ async function createUser() {
     }
 
     if (data.value?.id) {
-      setCookie(null, 'userId', `${data.value.id}`)
       navigateTo('/leaderboard')
     }
 }
