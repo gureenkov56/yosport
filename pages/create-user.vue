@@ -7,7 +7,15 @@
             </UFormField>
             <div v-if="error" class="hint error">{{errorText}}</div>
 
-            <UButton class="mt-2" @click="createUser">
+          <UFormField label="Рекорд подтягиваний (не обязательно)" class="mt-5">
+            <UInput v-model="pullUpsRecord" highlight color="neutral" type="number"/>
+          </UFormField>
+
+          <UFormField label="Рекорд отжиманий на брусьях (не обязательно)" class="mt-2">
+            <UInput v-model="dipsRecord" highlight  color="neutral" type="number"/>
+          </UFormField>
+
+            <UButton class="mt-5" @click="createUser">
                 Создать
             </UButton>
 
@@ -20,6 +28,9 @@
 
 <script lang='ts' setup>
 const name = ref('')
+const pullUpsRecord = ref('')
+const dipsRecord = ref('')
+
 const error = ref(false);
 const errorText = ref('')
 
@@ -37,7 +48,7 @@ async function createUser() {
 
     const { data, error: fetchError } = await useFetch('/api/users', {
       method: 'POST',
-      body: { name: name.value}
+      body: { name: name.value, RecordDips: +dipsRecord.value, RecordPullUps: +pullUpsRecord.value },
     })
 
     if (fetchError.value) {

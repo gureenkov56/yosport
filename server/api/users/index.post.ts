@@ -3,7 +3,7 @@ import { createError, sendError } from 'h3'
 
 
 export default defineEventHandler(async (event) => {
-  const {name} = await readBody(event)
+  const {name, RecordDips, RecordPullUps} = await readBody(event)
 
 
   if (!name) {
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
 
 
 
-  const newUser = await prisma.user.create({data: {name}})
+  const newUser = await prisma.user.create({data: {name, RecordDips, RecordPullUps}})
 
   setCookie(event, 'userId', `${newUser.id}`)
 

@@ -8,21 +8,20 @@ import { ULink, UButton } from '../.nuxt/components';
         <option value="pullups" selected>Подтягивания</option>
         <option value="dips">Отжимания на брусьях</option>
       </select>
+
     </div>
 
-    <UTable :data="sortedTableData" class="flex-1 mt-3" :columns="columns" ><div>ss</div></UTable>
+    <UTable :data="sortedTableData" class="flex-1 mt-3" :columns="columns"/>
 
-<!--      <div v-for="{ id, name, RecordDips, RecordPullUps } in sortedTableData" :key="id" :class="{error: id == +userId}">-->
-<!--        {{ id }} | {{ name }} / {{ RecordDips }} / {{ RecordPullUps }}-->
-<!--      </div>-->
-      <ULink to="/create-user">
-        <UButton class="mt-5">Добавить пользователя</UButton>
-      </ULink>
+    <ULink to="/create-user">
+      <UButton class="mt-5">Добавить пользователя</UButton>
+    </ULink>
   </main>
 </template>
 
 <script lang='ts' setup>
 import type {User} from "~/generated/prisma";
+import {UButton} from "#components";
 
 const selectedDiscipline = ref('pullups')
 
@@ -34,14 +33,19 @@ const sortedTableData = computed(() => {
     const resultB = selectedDiscipline.value === 'pullups' ? b.RecordPullUps : b.RecordDips;
 
     return resultA > resultB ? -1 : 1
+  }).map((user) => {
+    const nameWords = user.name.split(' ');
+    nameWords.length = 2;
+    user.name = nameWords.join(' ');
+    return user;
   })
 
   // console.log('sorted')
 
   // console.log('data.value', data.value)
-  // sorted[0].name = sorted[0].name + ' 🏆';
-  // sorted[1].name = sorted[1].name + ' 🥈';
-  // sorted[2].name = sorted[2].name + ' 🥉';
+  sorted[0].name = sorted[0].name + ' 🏆';
+  sorted[1].name = sorted[1].name + ' 🥈';
+  sorted[2].name = sorted[2].name + ' 🥉';
 
   return sorted
 })
@@ -53,11 +57,25 @@ const columns = [
   },
   {
     accessorKey: 'RecordPullUps',
-    header: 'Турник',
+    header: () => h(UButton, {
+      color: 'neutral',
+      variant: 'ghost',
+      label: 'Турник',
+      icon: selectedDiscipline.value === 'pullups' ? 'i-lucide-arrow-up' : '',
+      class: '-mx-2.5',
+      onClick: () => selectedDiscipline.value = 'pullups'
+    })
   },
   {
     accessorKey: 'RecordDips',
-    header: 'Брусья',
+    header: () => h(UButton, {
+      color: 'neutral',
+      variant: 'ghost',
+      label: 'Брусья',
+      icon: selectedDiscipline.value === 'dips' ? 'i-lucide-arrow-up' : '',
+      class: '-mx-2.5',
+      onClick: () => selectedDiscipline.value = 'dips'
+    }),
   },
 ]
 
@@ -70,6 +88,7 @@ const userId = computed(() => userStore.id)
 main {
   h1 {
     text-align: center;
+    margin-bottom: 0;
   }
 
   select {
