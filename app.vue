@@ -1,6 +1,7 @@
 <template>
   <UApp>
     <NuxtPage />
+    <Menu />
   </UApp>
 </template>
 
@@ -16,7 +17,9 @@
 }
 
 .wrapper {
-  margin: 2rem 1rem;
+  max-width: 800px;
+  margin: 2rem auto 50px auto;
+  padding: 0 1rem;
 }
 
 .mobile {
@@ -32,6 +35,10 @@ h1 {
   margin-bottom: 1rem;
   letter-spacing: 4px;
   text-transform: uppercase;
+}
+
+.center {
+  text-align: center;
 }
 
 a,
