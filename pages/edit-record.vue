@@ -1,28 +1,30 @@
 <template>
-  <main class="mobile">
-    <h1>Изменить личные рекорды</h1>
+  <main class="centered-block">
     <div>
-      Пользователь:
-      <select id="name" v-model="selectedUserId">
-        <option v-for="{id, name} in users" :key="id" :value="id">{{ name }}</option>
-      </select>
-
-      <UFormField label="Рекорд подтягиваний" class="mt-5">
-        <UInput v-model="inputPullUpsRecord" highlight color="neutral" type="number"/>
-      </UFormField>
-
-      <UFormField label="Рекорд отжиманий на брусьях" class="mt-2">
-        <UInput v-model="inputDipsRecord" highlight color="neutral" type="number"/>
-      </UFormField>
-
-      <UButton class="mt-5" @click="updateRecord">
-        Обновить данные
-      </UButton>
-
+      <h1>Изменить личные рекорды</h1>
       <div>
-        <UButton class="mt-2" color="neutral" variant="outline" @click="$router.back()">
-          Назад
+        Пользователь:
+        <select id="name" v-model="selectedUserId">
+          <option v-for="{id, name} in users" :key="id" :value="id">{{ name }}</option>
+        </select>
+
+        <UFormField label="Рекорд подтягиваний" class="mt-5">
+          <UInput v-model="inputPullUpsRecord" highlight color="neutral" type="number"/>
+        </UFormField>
+
+        <UFormField label="Рекорд отжиманий на брусьях" class="mt-2">
+          <UInput v-model="inputDipsRecord" highlight color="neutral" type="number"/>
+        </UFormField>
+
+        <UButton class="mt-5" @click="updateRecord">
+          Обновить данные
         </UButton>
+
+        <div>
+          <UButton class="mt-2" color="neutral" variant="outline" @click="$router.back()">
+            Назад
+          </UButton>
+        </div>
       </div>
     </div>
   </main>

@@ -1,11 +1,13 @@
 <template>
   <UApp>
-    <NuxtPage />
-    <Menu />
+    <NuxtPage/>
+    <Menu v-if="!hideMenu"/>
   </UApp>
 </template>
 
 <script setup lang="ts">
+const hideMenu = computed(() => useRouter().currentRoute.value.path === '/');
+console.log('useRouter().currentRoute.value.path', useRouter().currentRoute.value.path)
 </script>
 
 <style>
@@ -22,13 +24,20 @@
   padding: 0 1rem;
 }
 
-.mobile {
-  max-width: 500px;
-  width: 90%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+
+.centered-block {
+  height: 100vh;
+  position: relative;
+
+  > div {
+    width: 80%;
+    max-width: 400px;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 h1 {

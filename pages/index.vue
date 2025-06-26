@@ -1,15 +1,27 @@
 <template>
-  <main class="mobile">
-    <h1>Welcome to YoSport!</h1>
-    <UInput v-model="key" type="password" placeholder="Password" :color="error ? 'error' : 'neutral'" highlight  />
-    <div class="hint mb-3" :class="error ? 'error' : ''">* Пароль на листочке, где раньше таблица была</div>
+  <main class="centered-block">
     <div>
-      <UButton class="ml-2 bg-blue-500 text-white px-3 py-1" @click="submitKey">Enter</UButton>
+      <h1>Welcome to YoSport!</h1>
+      <UInput
+          v-model="key"
+          type="password"
+          placeholder="Password"
+          :color="error ? 'error' : 'neutral'"
+          highlight
+          @keyup.enter="submitKey"/>
+      <div class="hint mb-3" :class="error ? 'error' : ''">* Пароль на листочке, где раньше таблица была</div>
+      <div>
+        <UButton class="ml-2 bg-blue-500 text-white px-3 py-1" @click="submitKey">Войти</UButton>
+      </div>
     </div>
   </main>
 </template>
 
 <script lang='ts' setup>
+definePageMeta({
+  layout: 'no-menu'
+})
+
 const key = ref('')
 const error = ref(false)
 const correctKey = useRuntimeConfig().public.accessKey

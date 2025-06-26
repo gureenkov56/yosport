@@ -1,4 +1,3 @@
-import { ULink, UButton } from '../.nuxt/components';
 <template>
   <main class="wrapper">
     <h1>🏆 Leaderboard</h1>

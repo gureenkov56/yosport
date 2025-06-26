@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <nav class="menu">
     <hr>
     <ul>
       <li>
@@ -31,14 +31,16 @@
 <!--      </li>-->
 
     </ul>
-  </main>
+  </nav>
 </template>
 
 <script setup lang="ts">
 </script>
 <style scoped lang="scss">
-main {
+nav {
   padding: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
 
   hr {
     color: var(--ui-border-accented);
