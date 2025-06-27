@@ -14,6 +14,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Period {
+  WEEK
+  MONTH
+  YEAR
+}
+
 model User {
   id   Int     @id @default(autoincrement())
   name String?
@@ -21,25 +27,32 @@ model User {
   RecordDips    Int @default(0)
   RecordPullUps Int @default(0)
 
-  Dips    Dips[]
-  PullUps PullUps[]
+  Workouts Workout[]
+  Totals   Total[]
 }
 
-model PullUps {
+model Workout {
   id   Int      @id @default(autoincrement())
   date DateTime @default(now())
 
-  set String
+  dip    String
+  pullUp String
+
+  dipTotal    Int
+  pullUpTotal Int
 
   user   User @relation(fields: [userId], references: [id])
   userId Int
 }
 
-model Dips {
-  id   Int      @id @default(autoincrement())
-  date DateTime @default(now())
+model Total {
+  id               Int      @id @default(autoincrement())
+  firstDayOfPeriof DateTime // first day of this period
 
-  set String
+  type Period // month, week, year
+
+  dip    Int
+  pullUp Int
 
   user   User @relation(fields: [userId], references: [id])
   userId Int
