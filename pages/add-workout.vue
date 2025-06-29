@@ -1,14 +1,19 @@
 <template>
   <main class="wrapper">
     <div class="pt-10">
-      Пользователь:
+      <span class="mutted-text">
+        Пользователь:
+      </span>
       <select id="name" v-model="selectorUserId">
         <option v-for="{id, name} in users" :key="id" :value="id">{{ name }}</option>
       </select>
     </div>
 
     <div class="mt-2">
-      Дисциплина:
+      <span class="mutted-text">
+        Дисциплина:
+      </span>
+
       <select id="name" v-model="selectorDiscipline">
         <option value="pullups">Подтягивания на турнике</option>
         <option value="dips">Отжимания на брусьях</option>
@@ -18,14 +23,15 @@
     <div class="mt-8">
       <UPopover>
         <UButton color="neutral" variant="subtle" icon="i-lucide-calendar">
-          {{ modelValue ? df.format(modelValue.toDate(getLocalTimeZone())) : 'Select a date' }}
+          {{ calendarValue ? df.format(calendarValue.toDate(getLocalTimeZone())) : 'Select a date' }}
         </UButton>
 
         <template #content>
-          <UCalendar v-model="modelValue" class="p-2"/>
+          <UCalendar v-model="calendarValue" class="p-2"/>
         </template>
       </UPopover>
     </div>
+    {{ calendarValue }}
 
     <UFormField label="Подходы и повторения (через запятую)" class="mt-5">
       <UInput v-model="inputRep" highlight color="neutral" placeholder="10, Л5, 8, 5, 5"/>
@@ -34,13 +40,14 @@
       Итог: {{ total || 0 }}
     </div>
 
+
+    <UButton class="mt-5" @click="saveWorkout">
+      Сохранить
+    </UButton>
+
     <div class="hint mt-5">
       * Лесенку с 1 до 10 можно записать "Л10". <br>Сумма посчитается автоматически
     </div>
-
-    <UButton class="mt-5" @click="updateRecord">
-      Сохранить
-    </UButton>
   </main>
 </template>
 
@@ -81,27 +88,34 @@ function sumStairRep(result: number): number {
   return [...array].reduce((a, _, index) => a + ++index, 0);
 }
 
+const stairsSymbol = ['s', 'S', 'л', 'Л']
 const inputRep = ref('');
 const total = computed(() => {
   // todo вынести в utils так как может использоваться еще где-то
   const array = inputRep.value?.split(',').map(elem => {
-    if (elem[0] === 'Л' || elem[0] === 'л') {
-      const n = parseInt(elem.slice(1)) || 0;
+    const trimmedElem = elem.trim();
+
+    if (stairsSymbol.includes(trimmedElem[0])) {
+      const n = parseInt(trimmedElem.slice(1)) || 0;
       return sumStairRep(n)
     }
-    return parseInt(elem) || 0;
+    return parseInt(trimmedElem) || 0;
   });
 
   return array.reduce((a, b) => a + b, 0);
 });
 
 
-const modelValue = shallowRef(new CalendarDate(2022, 1, 10))
+const calendarValue = shallowRef(new CalendarDate(2022, 1, 10))
 
 
 const df = new DateFormatter('en-US', {
   dateStyle: 'medium'
 })
+
+function saveWorkout() {
+
+}
 
 
 </script>
@@ -109,6 +123,10 @@ const df = new DateFormatter('en-US', {
 <style lang="scss" scoped>
 .total, .hint {
   font-size: .8rem;
+  color: var(--ui-text-muted);
+}
+
+.mutted-text {
   color: var(--ui-text-muted);
 }
 </style>

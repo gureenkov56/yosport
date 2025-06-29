@@ -15,9 +15,14 @@ datasource db {
 }
 
 enum Period {
-  WEEK
-  MONTH
-  YEAR
+  WEEK  @map("week")
+  MONTH @map("month")
+  YEAR  @map("year")
+}
+
+enum Discipline {
+  PULLUPS @map("pullups")
+  DIPS    @map("dips")
 }
 
 model User {
@@ -35,11 +40,9 @@ model Workout {
   id   Int      @id @default(autoincrement())
   date DateTime @default(now())
 
-  dip    String
-  pullUp String
-
-  dipTotal    Int
-  pullUpTotal Int
+  discipline     Discipline @default(PULLUPS)
+  setsRepsString String?
+  total          String?
 
   user   User @relation(fields: [userId], references: [id])
   userId Int
@@ -49,10 +52,10 @@ model Total {
   id               Int      @id @default(autoincrement())
   firstDayOfPeriof DateTime // first day of this period
 
-  type Period // month, week, year
+  type Period @default(WEEK)
 
-  dip    Int
-  pullUp Int
+  dip    Int?
+  pullUp Int?
 
   user   User @relation(fields: [userId], references: [id])
   userId Int

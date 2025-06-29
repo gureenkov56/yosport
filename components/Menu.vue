@@ -2,19 +2,20 @@
   <nav class="menu">
     <hr>
     <ul>
+      <li class="margin-bottom">
+        <ULink to="/leaderboard">
+          🏆 Leaderboard
+        </ULink>
+      </li>
+
       <li>
-        <ULink to="/add-workout">
+        <ULink to="/add-workout" >
           ✏️ Записать тренировку
         </ULink>
       </li>
-      <li class="margin-bottom">
+      <li>
         <ULink to="/create-user">
           👋 Добавить пользователя
-        </ULink>
-      </li>
-      <li>
-        <ULink to="/leaderboard">
-          🏆 Leaderboard
         </ULink>
       </li>
       <!--      TODO: Профиль-->

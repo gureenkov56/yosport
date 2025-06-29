@@ -10,8 +10,6 @@ export default defineEventHandler(async (event) => {
     return sendError(event, createError({ statusCode: 400, message: 'Введите имя' }))
   }
 
-  console.log('name', name)
-
   const isUserExist = await prisma.user.findFirst({ where: { name } })
 
   if (isUserExist) {
