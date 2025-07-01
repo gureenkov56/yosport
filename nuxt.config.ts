@@ -17,5 +17,10 @@ export default defineNuxtConfig({
     public: {
       accessKey: process.env.NUXT_PUBLIC_ACCESS_KEY
     }
+  },
+  vite: {
+    server: {
+      allowedHosts: true,
+    },
   }
 })
