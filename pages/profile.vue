@@ -43,6 +43,7 @@
 import type {User, Workout} from "~/generated/prisma";
 
 const {data} = await useFetch<User[]>('/api/users')
+
 const users = ref(data.value)
 
 const userId = useCookie('userId');
@@ -74,8 +75,6 @@ watch(selectedUser, () => {
 
 const {pending, data: workoutsData } = await useFetch<Workout[]>(() => `/api/workout/${selectorUserId.value}`)
 
-
-
 const noWorkouts = computed(() => !workoutsData.value || !workoutsData.value.length)
 const workoutsForRender = computed(() => workoutsData?.value.map((workout) => {
   workout.discipline = workout.discipline === 'DIPS' ? 'Отжимания на брусьях' : 'Подтягивания';
@@ -89,8 +88,7 @@ const workoutsForRender = computed(() => workoutsData?.value.map((workout) => {
   workout.formattedDate = `${day}.${month}.${year}`
 
   return workout
-}).sort((a, b) => a - b)
-)
+}))
 </script>
 
 <style lang="scss" scoped>

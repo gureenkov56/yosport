@@ -53,7 +53,6 @@
 import type {User} from "~/generated/prisma";
 import {Discipline} from "~/prisma/prisma.enum";
 
-import {CalendarDate, DateFormatter} from '@internationalized/date'
 import type {WorkoutPost} from "~/server/api/workout/index.post";
 
 // TODO при подгрузке страницы получить данные за сегодня этого юзера за эту дисциплину
@@ -65,6 +64,11 @@ const selectorDiscipline = ref<Discipline>(Discipline.PULLUPS)
 let currentWorkoutId: null | number = null;
 
 const {data} = await useFetch<User[]>('/api/users')
+
+if (!data.value || !data.value.length) {
+  await navigateTo('/create-user')
+}
+
 const users = ref(data.value)
 const selectorUserId = ref(userId.value || 0)
 

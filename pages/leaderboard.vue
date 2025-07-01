@@ -23,7 +23,7 @@
   </main>
 </template>
 
-<script lang='ts' setup>
+<script lang='ts' setup async>
 import type {User} from "~/generated/prisma";
 import {UButton} from "#components";
 
@@ -32,7 +32,7 @@ const selectedDiscipline = ref('pullups')
 const {data} = await useFetch<User[]>('/api/users')
 
 if (!data.value || !data.value.length) {
-   navigateTo('/create-user')
+   await navigateTo('/create-user')
 }
 
 const sortedTableData = computed(() => {
@@ -45,21 +45,30 @@ const sortedTableData = computed(() => {
     const resultB = selectedDiscipline.value === 'pullups' ? b.RecordPullUps : b.RecordDips;
 
     return resultA > resultB ? -1 : 1
-  }).map((user) => {
+  })
+
+  const result = sorted.map((user) => {
+    if (!user.name) {
+      return user
+    }
+
+    // cleaning by 🏆
     const nameWords = user.name.split(' ');
     nameWords.length = 2;
     user.name = nameWords.join(' ');
     return user;
   })
 
-  // console.log('sorted')
 
   // console.log('data.value', data.value)
-  sorted[0].name = sorted[0].name + ' 🏆';
-  sorted[1].name = sorted[1].name + ' 🥈';
-  sorted[2].name = sorted[2].name + ' 🥉';
+  if (result.length > 2) {
+    sorted[0].name = sorted[0].name + ' 🏆';
+    sorted[1].name = sorted[1].name + ' 🥈';
+    sorted[2].name = sorted[2].name + ' 🥉';
+  }
 
-  return sorted
+
+  return result
 })
 
 const columns = [

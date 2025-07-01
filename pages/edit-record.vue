@@ -37,6 +37,11 @@ const toast = useToast()
 
 
 const {data} = await useFetch<User[]>('/api/users')
+
+if (!data.value || !data.value.length) {
+  await navigateTo('/create-user')
+}
+
 const users = ref(data.value)
 
 const selectedUserId = ref()

@@ -24,7 +24,7 @@
   </main>
 </template>
 
-<script lang='ts' setup>
+<script lang='ts' setup async>
 
 const name = ref('')
 const pullUpsRecord = ref('')
@@ -32,6 +32,8 @@ const dipsRecord = ref('')
 
 const error = ref(false);
 const errorText = ref('')
+
+const userId = useCookie('userId')
 
 watch(name, () => {
   error.value = false
@@ -58,7 +60,8 @@ async function createUser() {
   }
 
   if (data.value?.id) {
-    navigateTo('/leaderboard')
+    userId.value = `${data.value.id}`;
+    await navigateTo('/leaderboard')
   }
 }
 </script>
