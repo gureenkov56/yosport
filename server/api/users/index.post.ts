@@ -13,9 +13,7 @@ export default defineEventHandler(async (event) => {
   const isUserExist = await prisma.user.findFirst({ where: { name } })
 
   if (isUserExist) {
-
     return sendError(event, createError({ statusCode: 409, message: 'Пользователь с таким именем уже существует' }))
-
   }
 
   const newUser = await prisma.user.create({data: {name, RecordDips, RecordPullUps}})

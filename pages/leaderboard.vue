@@ -36,7 +36,7 @@ if (!data.value || !data.value.length) {
 }
 
 const sortedTableData = computed(() => {
-  if (!data.value) {
+  if (!data.value || !data.value.length) {
     return []
   }
 
