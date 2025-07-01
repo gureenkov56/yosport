@@ -13,25 +13,23 @@
       <span class="mutted-text">
         Дисциплина:
       </span>
-
       <select id="name" v-model="selectorDiscipline">
-        <option value="pullups">Подтягивания на турнике</option>
-        <option value="dips">Отжимания на брусьях</option>
+        <option value="PULLUPS">Подтягивания на турнике</option>
+        <option value="DIPS">Отжимания на брусьях</option>
       </select>
     </div>
 
-    <div class="mt-8">
-      <UPopover>
-        <UButton color="neutral" variant="subtle" icon="i-lucide-calendar">
-          {{ calendarValue ? df.format(calendarValue.toDate(getLocalTimeZone())) : 'Select a date' }}
-        </UButton>
+    <!--    <div class="mt-8">-->
+    <!--      <UPopover>-->
+    <!--        <UButton color="neutral" variant="subtle" icon="i-lucide-calendar">-->
+    <!--          {{ selectedDate ? df.format(selectedDate.toDate(getLocalTimeZone())) : 'Select a date' }}-->
+    <!--        </UButton>-->
 
-        <template #content>
-          <UCalendar v-model="calendarValue" class="p-2"/>
-        </template>
-      </UPopover>
-    </div>
-    {{ calendarValue }}
+    <!--        <template #content>-->
+    <!--          <UCalendar v-model="selectedDate" class="p-2"/>-->
+    <!--        </template>-->
+    <!--      </UPopover>-->
+    <!--    </div>-->
 
     <UFormField label="Подходы и повторения (через запятую)" class="mt-5">
       <UInput v-model="inputRep" highlight color="neutral" placeholder="10, Л5, 8, 5, 5"/>
@@ -53,14 +51,18 @@
 
 <script setup lang="ts">
 import type {User} from "~/generated/prisma";
+import {Discipline} from "~/prisma/prisma.enum";
 
-import {CalendarDate, DateFormatter, getLocalTimeZone} from '@internationalized/date'
+import {CalendarDate, DateFormatter} from '@internationalized/date'
+import type {WorkoutPost} from "~/server/api/workout/index.post";
 
 // TODO при подгрузке страницы получить данные за сегодня этого юзера за эту дисциплину
 
 const userId = useCookie('userId')
 
-const selectorDiscipline = ref('pullups')
+const selectorDiscipline = ref<Discipline>(Discipline.PULLUPS)
+
+let currentWorkoutId: null | number = null;
 
 const {data} = await useFetch<User[]>('/api/users')
 const users = ref(data.value)
@@ -77,8 +79,32 @@ const selectedUser = computed(() => {
 })
 
 watch(selectedUser, () => {
-  userId.value = selectedUser.value.id || 1
+  userId.value = selectedUser.value.id || 1;
+  getDataForTodayWorkout();
 })
+
+watch(selectorDiscipline, getDataForTodayWorkout)
+
+async function getDataForTodayWorkout() {
+  const {data} = await useFetch(`/api/workout/today`, {
+    method: "POST",
+    body: {
+      userId: userId.value,
+      discipline: selectorDiscipline.value
+    }
+  })
+
+  if (data.value) {
+    currentWorkoutId = data.value.id
+    inputRep.value = data.value.setsReps
+  } else {
+    currentWorkoutId = null
+    inputRep.value = '';
+  }
+
+  console.log('currentWorkoutId', currentWorkoutId)
+  console.log('> findTodayWorkout', data.value)
+}
 
 
 function sumStairRep(result: number): number {
@@ -106,18 +132,60 @@ const total = computed(() => {
 });
 
 
-const calendarValue = shallowRef(new CalendarDate(2022, 1, 10))
+// const selectedDate = shallowRef(new CalendarDate(2022, 1, 10))
+// const isoDate = computed(() => selectedDate.value.toString())  // '2024-06-19'
+// const dateForDb = computed(() => new Date(isoDate.value))  // Date object with UTC midnight
+//
+//
+// const df = new DateFormatter('en-US', {
+//   dateStyle: 'medium'
+// })
+
+const toast = useToast()
+
+async function saveWorkout() {
+
+  const body: WorkoutPost = {
+    id: currentWorkoutId,
+    userId: +selectorUserId.value,
+    discipline: selectorDiscipline.value,
+    setsReps: inputRep.value,
+    total: total.value,
+  }
+
+  // TODO validation
+
+  const {error, status} = await useFetch(`/api/workout`, {
+    method: 'POST',
+    body,
+  })
+
+  console.log('error', error)
 
 
-const df = new DateFormatter('en-US', {
-  dateStyle: 'medium'
-})
+  if (error.value) {
+    console.log('error', error)
+    toast.add({
+      title: 'Ошибка',
+      description: 'Что-то пошло не так',
+      color: 'error'
+    })
 
-function saveWorkout() {
+    return
+  }
+
+
+  if (status.value === 'success') {
+    toast.add({
+      title: 'Успешно!',
+      description: 'Тренировка записана',
+      color: 'success'
+    })
+  }
 
 }
 
-
+getDataForTodayWorkout()
 </script>
 
 <style lang="scss" scoped>

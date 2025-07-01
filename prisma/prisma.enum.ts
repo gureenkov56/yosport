@@ -5,6 +5,6 @@ export enum Period {
 }
 
 export enum Discipline {
-    PULLUPS,
-    DIPS
+    PULLUPS = 'PULLUPS',
+    DIPS = 'DIPS'
 }

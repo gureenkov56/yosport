@@ -2,9 +2,14 @@
   <nav class="menu">
     <hr>
     <ul>
-      <li class="margin-bottom">
+      <li >
         <ULink to="/leaderboard">
           🏆 Leaderboard
+        </ULink>
+      </li>
+      <li class="margin-bottom">
+        <ULink to="/profile">
+          📋 Профиль
         </ULink>
       </li>
 

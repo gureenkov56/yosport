@@ -1,36 +1,49 @@
-import { createError, sendError } from 'h3'
 import type {Discipline} from "~/prisma/prisma.enum";
+import {createError, sendError} from "h3";
+import {prisma} from "~/prisma";
 
-type WorkoutPost = {
+export type WorkoutPost = {
+    id?: number,
     userId: number
     discipline: Discipline
     setsReps: string
     total: number
+    date?: Date
 }
 
 export default defineEventHandler(async (event) => {
-    const {userId, discipline, setsReps, total} = await readBody<WorkoutPost>(event)
+    const {id, userId, discipline, setsReps, total, date} = await readBody<WorkoutPost>(event)
 
-    console.log('userId, discipline, setsReps, total', userId, discipline, setsReps, total)
+    if (!userId || discipline === undefined || !setsReps || !total) {
+        return sendError(event, createError({statusCode: 400}))
+    }
 
-    // if (!name) {
-    //     return sendError(event, createError({ statusCode: 400, message: 'Введите имя' }))
-    // }
-    //
-    // console.log('name', name)
-    //
-    // const isUserExist = await prisma.user.findFirst({ where: { name } })
-    //
-    // if (isUserExist) {
-    //     console.log('user already exists')
-    //
-    //     return sendError(event, createError({ statusCode: 409, message: 'Пользователь с таким именем уже существует' }))
-    //
-    // }
-    //
-    // const newUser = await prisma.user.create({data: {name, RecordDips, RecordPullUps}})
-    //
-    // setCookie(event, 'userId', `${newUser.id}`)
-    //
-    // return {success: true, ...newUser}
+    if (id) {
+        const workout = await prisma.workout.update({
+            where: {
+                id
+            },
+            data: {
+                setsReps,
+                total,
+            }
+        })
+
+        return {success: true, ...workout}
+    }
+
+
+    const workout = await prisma.workout.create({
+        data: {
+            discipline,
+            setsReps,
+            total,
+            date,
+            user: {
+                connect: {id: userId},
+            }
+        }
+    })
+
+    return {success: true, ...workout}
 })

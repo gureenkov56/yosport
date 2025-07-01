@@ -21,8 +21,8 @@ enum Period {
 }
 
 enum Discipline {
-  PULLUPS @map("pullups")
-  DIPS    @map("dips")
+  PULLUPS
+  DIPS
 }
 
 model User {
@@ -40,9 +40,9 @@ model Workout {
   id   Int      @id @default(autoincrement())
   date DateTime @default(now())
 
-  discipline     Discipline @default(PULLUPS)
-  setsRepsString String?
-  total          String?
+  discipline Discipline @default(PULLUPS)
+  setsReps   String?
+  total      Int?
 
   user   User @relation(fields: [userId], references: [id])
   userId Int

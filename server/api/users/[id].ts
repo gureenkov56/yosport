@@ -2,7 +2,6 @@ import {prisma} from "~/prisma"
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id') || 0
-    console.log('id', id)
 
     // if (!Number.isInteger(id)) {
     //     throw createError({
@@ -13,7 +12,6 @@ export default defineEventHandler(async (event) => {
 
     if (+id === 0) {
         const user = await prisma.user.findFirst()
-        console.log('>> user', user.id)
         setCookie(event, 'userId', '1', {path: '/', sameSite: 'lax'})
         return user
     }
