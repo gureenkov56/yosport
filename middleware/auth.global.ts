@@ -1,6 +1,11 @@
 export default defineNuxtRouteMiddleware((to) => {
-  const cookieKey = useCookie('access_key')?.value || '';
+  const cookieKey = useCookie('access_key')?.value;
   const validKey = useRuntimeConfig().public.accessKey
+
+  if (!validKey) {
+    console.error('Ключ для авторизации не найден в файле .env')
+    return
+  }
 
   const isHome = to.path === '/'
   const isAuthorized = cookieKey === validKey

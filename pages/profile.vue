@@ -94,6 +94,9 @@ const workoutsForRender = computed(() => workoutsData?.value.map((workout) => {
 </script>
 
 <style lang="scss" scoped>
+h1 {
+  font-size: 1.5rem;
+}
 .date {
   color: #a3a8a8;
   font-size: .8rem;
