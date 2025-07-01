@@ -9,7 +9,7 @@
       </select>
     </div>
 
-    <UTable :data="sortedTableData" class="flex-1 mt-3" :columns="columns"/>
+    <UTable v-if="sortedTableData.length" :data="sortedTableData" class="flex-1 mt-3" :columns="columns"/>
 
     <div>
       <ULink to="/edit-record">
@@ -31,7 +31,15 @@ const selectedDiscipline = ref('pullups')
 
 const {data} = await useFetch<User[]>('/api/users')
 
+if (!data.value || !data.value.length) {
+   navigateTo('/create-user')
+}
+
 const sortedTableData = computed(() => {
+  if (!data.value) {
+    return []
+  }
+
   const sorted = [...data.value].sort((a, b) => {
     const resultA = selectedDiscipline.value === 'pullups' ? a.RecordPullUps : a.RecordDips;
     const resultB = selectedDiscipline.value === 'pullups' ? b.RecordPullUps : b.RecordDips;
