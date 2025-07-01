@@ -7,7 +7,6 @@
 
 <script setup lang="ts">
 const hideMenu = computed(() => useRouter().currentRoute.value.path === '/');
-console.log('useRouter().currentRoute.value.path', useRouter().currentRoute.value.path)
 </script>
 
 <style>
